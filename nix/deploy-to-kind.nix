@@ -3,7 +3,7 @@
 pkgs.writeScriptBin "deploy-to-kind"
 ''
       #! ${pkgs.runtimeShell}
-      set -e
+      set -euo pipefail
       ${kind}/bin/kind delete cluster || true
       ${kind}/bin/kind create cluster
 

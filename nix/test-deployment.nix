@@ -2,7 +2,7 @@
 
 pkgs.writeScriptBin "test-deployment" ''
       #! ${pkgs.runtimeShell}
-      set -e
+      set -euo pipefail
       SERVICE_URL=http://localhost:8001/api/v1/namespaces/default/services/hello:3000/proxy/
       KUBECONFIG=$(${kind}/bin/kind get kubeconfig-path --name="kind")
 
