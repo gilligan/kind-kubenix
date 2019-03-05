@@ -2,35 +2,39 @@
 
 let
   kubeVersion = "1.11";
-  helloAppPort = 3000;
-  helloCpu = if type == "dev" then "100m" else "1000m";
+
+  helloApp = rec {
+    label = "hello";
+    port = 3000;
+    cpu = if type == "dev" then "100m" else "1000m";
+    imagePolicy = if type == "dev" then "Never" else "IfNotPresent";
+    env = [{ name = "APP_PORT"; value = "${toString port}"; }];
+  };
 in
 {
   kubernetes.version = kubeVersion;
 
-  kubernetes.resources.deployments.hello = {
-    metadata.labels.app = "hello";
+  kubernetes.resources.deployments."${helloApp.label}" = {
+    metadata.labels.app = helloApp.label;
     spec = {
       replicas = 1;
-      selector.matchLabels.app = "hello";
+      selector.matchLabels.app = helloApp.label;
       template = {
-        metadata.labels.app = "hello";
-        spec.containers.hello = {
-          name = "hello";
+        metadata.labels.app = helloApp.label;
+        spec.containers."${helloApp.label}" = {
+          name = "${helloApp.label}";
           image = "hello-app:latest";
-          imagePullPolicy = "Never";
-          ports."${toString helloAppPort}" = {};
-          resources.requests.cpu = "100m";
-          env = [
-            { name = "APP_PORT"; value = "${toString helloAppPort}"; }
-          ];
+          imagePullPolicy = helloApp.imagePolicy;
+          env = helloApp.env;
+          resources.requests.cpu = helloApp.cpu;
+          ports."${toString helloApp.port}" = {};
         };
       };
     };
   };
 
-  kubernetes.resources.services.hello = {
-    spec.selector.app = "hello";
-    spec.ports."${toString helloAppPort}".targetPort = helloAppPort;
+  kubernetes.resources.services."${helloApp.label}" = {
+    spec.selector.app = "${helloApp.label}";
+    spec.ports."${toString helloApp.port}".targetPort = helloApp.port;
   };
 }
