@@ -3,6 +3,7 @@
 pkgs.writeScriptBin "test-deployment" ''
       #! ${pkgs.runtimeShell}
       set -e
+      SERVICE_URL=http://localhost:8001/api/v1/namespaces/default/services/hello:3000/proxy/
 
       PROXY_PID=""
       trap cleanup EXIT
@@ -25,7 +26,7 @@ pkgs.writeScriptBin "test-deployment" ''
       PROXY_PID=$!
       sleep 3
 
-      RESPONSE=$(${pkgs.curl}/bin/curl --silent http://localhost:8001/api/v1/namespaces/default/services/hello:3000/proxy/)
+      RESPONSE=$(${pkgs.curl}/bin/curl --silent $SERVICE_URL)
       if ! [ "$RESPONSE" == "Hello World" ]; then
         echo "Error: did not get expected response from service:"
         echo $RESPONSE

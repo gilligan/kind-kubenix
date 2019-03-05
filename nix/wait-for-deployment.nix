@@ -16,6 +16,7 @@ pkgs.stdenv.mkDerivation rec {
     pkgs.coreutils
     pkgs.kubectl
   ];
+
   buildInputs = [ pkgs.makeWrapper ];
 
   installPhase = ''
@@ -23,6 +24,5 @@ pkgs.stdenv.mkDerivation rec {
     cp wait-for-deployment $out/bin
     chmod +x $out/bin
     wrapProgram $out/bin/wait-for-deployment --prefix PATH : "${deps}"
-
   '';
 }
