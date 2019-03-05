@@ -34,6 +34,17 @@ in
       inherit appImage; 
     };
 
+    deploy-and-test = pkgs.mkShell {
+      buildInputs = [ kind deploy-to-kind test-deployment wait-for-deployment ];
+      shellHook = ''
+        deploy-to-kind
+        export KUBECONFIG=$(kind get kubeconfig-path)
+        wait-for-deployment hello
+        test-deployment
+        kind delete cluster
+      '';
+    };
+
     shell = pkgs.mkShell {
       buildInputs = [ 
         kind
