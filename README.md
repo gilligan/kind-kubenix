@@ -141,3 +141,4 @@ The `default.nix` of the project exposes the following attributes:
 **Notes**:
 - The version of `kind` used in this project is built from the master revision at the time of writing. The latest release doesn't include the `kind load` functionality.
 - kubenix currently doesn't have any documentation but a major overhaul with great features is in the works. Follow [kubenix refactoring](https://github.com/xtruder/kubenix/issues/9) for details.
+- I used [wait-for-deployment](https://github.com/timoreimann/kubernetes-scripts) - a nice little bash script - to wait for the completion of the deployment.
