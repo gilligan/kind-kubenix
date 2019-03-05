@@ -4,17 +4,22 @@ with pkgs.stdenv.lib;
 
 pkgs.buildGoPackage rec {
   name = "kind-${version}";
-  version = "0.1.0";
+  version = "0.1.0-master";
 
   src = pkgs.fetchFromGitHub {
-    rev = "${version}";
     owner = "kubernetes-sigs";
     repo = "kind";
-    sha256 = "01ifmnv3jid4ls6qw9d6j9vldjbbnrwclzv8spnh6fnzb2wprln2";
+    rev = "91356d6ac460bda3a174850c9b44af7a62924cd3";
+    sha256 = "05ssd0gbwz7bz0x05vfjn5agaz5vm546865qafwxwalhr4z3gq0p";
   };
 
   goPackagePath = "sigs.k8s.io/kind";
-  excludedPackages = "images/base/entrypoint";
+
+  subPackages = ["."];
+
+  #preConfigure = ''
+    #export GO111MODULE=on
+  #'';
 
   meta = {
     description = "kubernetes IN Docker - local clusters for testing Kubernetes";
