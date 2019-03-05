@@ -8,6 +8,8 @@ let
 
   kubenix = pkgs.callPackage ./nix/kubenix.nix {};
 
+  wait-for-deployment = pkgs.callPackage ./nix/wait-for-deployment.nix {};
+
   buildConfig = t: kubenix.buildResources { configuration = import ./configuration.nix { type = t; }; };
 
   appImage = pkgs.dockerTools.buildLayeredImage {
@@ -33,7 +35,7 @@ in
     };
 
     shell = pkgs.mkShell {
-      buildInputs = [ deploy-to-kind test-deployment ];
+      buildInputs = [ deploy-to-kind test-deployment wait-for-deployment ];
     };
 
   }
