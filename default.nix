@@ -36,13 +36,14 @@ in
 
     shell = pkgs.mkShell {
       buildInputs = [ 
-        curl
         kind
-        pkgs.kubectl
-        pkgs.docker 
         deploy-to-kind
         test-deployment
-        wait-for-deployment ];
+        wait-for-deployment
+        pkgs.curl
+        pkgs.docker 
+        pkgs.kubectl
+      ];
     };
 
   }
